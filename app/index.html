@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width">
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
-
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
@@ -62,14 +61,41 @@
 
     <div class="container">
       <div class="header wrapper">
-        <h1>nbed_metaTitle</h1>
+        <h1>Gyro!!!</h1>
       </div>
-      <div class="main wrapper">
-        <p>main</p>
-      </div>
-      <div class="footer wrapper">
-        <p>footer</p>
-      </div>
+      <main class="main wrapper">
+        
+        <div id="yes"> 
+            <div class="box" id="accel">
+              <span class="head">Accelerometer</span>
+              <span id="xlabel"></span>
+              <span id="ylabel"></span>
+              <span id="zlabel"></span>
+              <span id="ilabel"></span>         
+              <span id="arAlphaLabel"></span>                   
+              <span id="arBetaLabel"></span>                    
+              <span id="arGammaLabel"></span>                                       
+            </div>    
+          
+            <div class="box" id="gyro">
+              <span class="head">Gyroscope</span>
+              <span id="alphalabel"></span>     
+              <span id="betalabel"></span>
+              <span id="gammalabel"></span>
+            </div>
+            
+            <div class="box2" id="accelcolor">
+              <span class="head">Color</span>
+            </div>
+            <div class="box2" id="gyrocolor">
+              <span class="head">Color</span>
+            </div>
+            
+        </div>
+        <div id="no">
+          Your browser does not support Device Orientation and Motion API. Try this sample with iPhone, iPod or iPad with iOS 4.2+.    
+        </div>
+      </main>
     </div>
 
 
@@ -93,7 +119,12 @@
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/social-likes/src/social-likes.js"></script>
     <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:js({app,.tmp}) scripts/main.js -->
+    <script src="scripts/main.js"></script>
     <!-- endbuild -->
 
     <!-- NBED: Google Analytics: change UA-XXXXX-X to be your site's ID.
@@ -107,11 +138,6 @@
     </script>
     -->
 
-
     <script src="http://www.linkstant.com/linkstant.js" type="text/javascript"></script>
-
-        <!-- build:js({app,.tmp}) scripts/main.js -->
-        <script src="scripts/main.js"></script>
-        <!-- endbuild -->
 </body>
 </html>
