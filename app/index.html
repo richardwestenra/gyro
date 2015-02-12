@@ -64,49 +64,26 @@
         <h1>Gyro!!!</h1>
       </div>
       <main class="main wrapper">
-        
-        <div id="yes"> 
-            <div class="box" id="accel">
-              <span class="head">Accelerometer</span>
-              <span id="xlabel"></span>
-              <span id="ylabel"></span>
-              <span id="zlabel"></span>
-              <span id="ilabel"></span>         
-              <span id="arAlphaLabel"></span>                   
-              <span id="arBetaLabel"></span>                    
-              <span id="arGammaLabel"></span>                                       
-            </div>    
-          
-            <div class="box" id="gyro">
-              <span class="head">Gyroscope</span>
-              <span id="alphalabel"></span>     
-              <span id="betalabel"></span>
-              <span id="gammalabel"></span>
-            </div>
-            
-            <div class="box2" id="accelcolor">
-              <span class="head">Color</span>
-            </div>
-            <div class="box2" id="gyrocolor">
-              <span class="head">Color</span>
-            </div>
-            
-        </div>
-        <div id="no">
-          Your browser does not support Device Orientation and Motion API. Try this sample with iPhone, iPod or iPad with iOS 4.2+.    
-        </div>
+        <p id="values"></p>
+        <ul id="gyro" class="gyro">
+          <li id="alpha">alpha</li>
+          <li id="beta">beta</li>
+          <li id="gamma">gamma</li>
+        </ul>
       </main>
     </div>
 
 
+    <!-- NBED check client name and png/jpg filetypes: -->
+<!-- 
     <div id="embed" style="display:none;">
       <h5>Love it? Embed it on your website or blog:</h5>
       <a href="#" class="embedLink closeEmbed">&times;</a>
-      <!-- NBED check client name and png/jpg filetypes: -->
       <textarea onclick="this.select();">&lt;a href=&quot;http://nbed_url/&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;http://nbed_url/social/embed.png&quot; border=&quot;0&quot; width=&quot;550&quot; height=&quot;550&quot; /&gt;&lt;/a&gt;&lt;br /&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;Click image to open interactive version (via &lt;a href=&quot;http://www.photoworld.co.uk/&quot;&gt;photoworld&lt;/a&gt;).&lt;/span&gt;</textarea>
     </div>
+ -->
 
-
+<!-- 
     <div class="social social-likes social-likes_vertical social-likes_notext" data-url="http://nbed_url/" data-title="nbed_socialTitle">
       <a class="facebook" href="#" title="Share link on Facebook">Facebook</a>
       <a class="twitter" href="#" data-via="nbed_twitter" data-title="nbed_tweet" title="Share link on Twitter">Twitter</a>
@@ -115,7 +92,7 @@
       <a class="pinterest" href="#" title="Share image on Pinterest" data-media="http://nbed_url/social/og1200.png">Pinterest</a>
       <a class="embedLink" href="#" title="Embed link on your website"><span class="social-likes__button">Embed</span></a>
     </div>
-
+ -->
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->

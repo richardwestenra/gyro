@@ -8,42 +8,23 @@
 
 body {
 }
-#no {
-	display: none;	
-}	
-
-.outer {
-	background: rgba(123, 256, 245, 0.9);
-	padding: 0px;
-	min-height: 48px;
-}
-
-.box {
+.gyro {
 	position: relative;
-	float: left;
-	width: 45%;
-	padding: 7px;
-	border: 1px solid rgba(255, 255, 255, 0.6);
-	background: rgba(178,215,255,0.75);
-	min-height: 160px;
-}	
-
-.box2 {
-	position: relative;
-	float: left;
-	width: 45%;
-	padding: 7px;
-	border: 1px solid rgba(255, 255, 255, 0.6);
-	background: rgba(178,215,255,0.75);
-}	
-
-.box span {
-	display: block;
+	text-align: center;
+	border: 1px solid #ccc;
+	width: 100%;
+	li {
+		display: block;
+		width: 90px;
+		margin: 2em auto;
+		border-radius: 3px;
+		background: steelblue;
+		color: white;
+		font-weight: bold;
+		position: relative;
+	}
 }
-
-span.head {
-	font-weight: bold;				
-}
+	
 		
 
 
