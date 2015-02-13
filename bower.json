@@ -6,11 +6,15 @@
     "modernizr": "~2.8.2",
     "respond": "~1.4.2",
     "social-likes": "~3.0.4",
-    "threejs": "*"
+    "threejs": "*",
+    "sense-js": "git://github.com/ehzhang/sense-js.git"
   },
   "overrides": {
     "social-likes": {
       "main": "./src/social-likes.js"
+    },
+    "sense-js": {
+      "main": "public/js/sense.js"
     }
   }
 }

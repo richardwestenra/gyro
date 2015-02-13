@@ -1,5 +1,5 @@
 // jshint devel:true
-/* globals THREE */
+/* globals THREE, sense */
 
 $(function(){
 	'use strict';
@@ -9,41 +9,42 @@ $(function(){
   //--- Helper functions ---//
 
   // Round to the nearest 2 large digits (e.g. 12345 => 12000)
-  function roundLarge(x) {
-    for(var i=1000000; i>=10; i=i/10){
-      if (x>(i*10)) {
-        return Math.round(x/i)*i;
-      }
-    }
-    return Math.round(x);
-  }
-  // Round to SI prefixes
-  function si(x) {
-    var n = { 'M': 1000000, 'K': 1000};
-    for(var key in n){
-      if (x>n[key]) {
-        return roundLarge(x) / n[key] + key;
-      }
-    }
-    return Math.round(x);
-  }
+  // function roundLarge(x) {
+  //   for(var i=1000000; i>=10; i=i/10){
+  //     if (x>(i*10)) {
+  //       return Math.round(x/i)*i;
+  //     }
+  //   }
+  //   return Math.round(x);
+  // }
+  // // Round to SI prefixes
+  // function si(x) {
+  //   var n = { 'M': 1000000, 'K': 1000};
+  //   for(var key in n){
+  //     if (x>n[key]) {
+  //       return roundLarge(x) / n[key] + key;
+  //     }
+  //   }
+  //   return Math.round(x);
+  // }
 
 
 
   //--- Global variables ---//
 
-  var $embed = $('#embed');
+  // var $embed = $('#embed');
+  var $window = $(window);
 
   // Gyro vars:
-  var delay = 100,
-    alpha = 0,
-    beta = 0,
-    gamma = 0;
+  // var delay = 100,
+  //   alpha = 0,
+  //   beta = 0,
+  //   gamma = 0;
 
   // Three vars: 
   // set the scene size
-  var WIDTH = 900,
-    HEIGHT = 600;
+  var WIDTH = $window.width() || 900,
+    HEIGHT = $window.height() || 600;
 
   // set some camera attributes
   var VIEW_ANGLE = 45,
@@ -60,7 +61,7 @@ $(function(){
   //--- Init ---//
 
   function init(){
-    gyro();
+    // gyro();
     threeDemo();
   }
 
@@ -68,67 +69,67 @@ $(function(){
   
   //--- Gyro detection ---//
 
-  function gyro(){
+  // function gyro(){
 
-    function left(n, k) {
-      k = k || 50;
-      return (n * k)+ 'px' ;
-    }
-    function z(n) {
-      n = (n / 360) || 0;
-      return left(n);
-    }
-    function x(n) {
-      n = (n / 180) || 0;
-      return left(n);
-    }
-    function y(n) {
-      n = (n / 90) || 0;
-      return left(n);
-    }
+  //   function left(n, k) {
+  //     k = k || 50;
+  //     return (n * k)+ 'px' ;
+  //   }
+  //   function z(n) {
+  //     n = (n / 360) || 0;
+  //     return left(n);
+  //   }
+  //   function x(n) {
+  //     n = (n / 180) || 0;
+  //     return left(n);
+  //   }
+  //   function y(n) {
+  //     n = (n / 90) || 0;
+  //     return left(n);
+  //   }
 
-    window.ondeviceorientation = function(event) {
-      alpha = Math.round(event.alpha);
-      beta = Math.round(event.beta);
-      gamma = Math.round(event.gamma);
-    };
+  //   window.ondeviceorientation = function(event) {
+  //     alpha = Math.round(event.alpha);
+  //     beta = Math.round(event.beta);
+  //     gamma = Math.round(event.gamma);
+  //   };
       
     
-    if (window.DeviceMotionEvent===undefined) {
+  //   if (window.DeviceMotionEvent===undefined) {
 
-      $('<p>',{
-        class: 'browsehappy',
-        text: 'Your browser does not support Device Orientation and Motion API. Try this sample with iPhone, iPod or iPad with iOS 4.2+.'
-      }).prependTo('body');
+  //     $('<p>',{
+  //       class: 'browsehappy',
+  //       text: 'Your browser does not support Device Orientation and Motion API. Try this sample with iPhone, iPod or iPad with iOS 4.2+.'
+  //     }).prependTo('body');
 
-    } else {
+  //   } else {
 
-      setInterval(function() {
+  //     setInterval(function() {
 
-        $('#values').text('Alpha: ' + alpha +', Beta: ' + beta + ', Gamma: ' + gamma);
+  //       $('#values').text('Alpha: ' + alpha +', Beta: ' + beta + ', Gamma: ' + gamma);
 
-        $('#alpha')
-          .text('Alpha: ' + alpha)
-          .css({
-            'left': z(alpha,100)
-          });
+  //       $('#alpha')
+  //         .text('Alpha: ' + alpha)
+  //         .css({
+  //           'left': z(alpha,100)
+  //         });
 
-        $('#beta')
-          .text('Beta: ' + beta)
-          .css({
-            'left': x(beta)
-          });
+  //       $('#beta')
+  //         .text('Beta: ' + beta)
+  //         .css({
+  //           'left': x(beta)
+  //         });
 
-        $('#gamma')
-          .text('Gamma: ' + gamma)
-          .css({
-            'left': y(gamma)
-          });
+  //       $('#gamma')
+  //         .text('Gamma: ' + gamma)
+  //         .css({
+  //           'left': y(gamma)
+  //         });
 
-      }, delay);
+  //     }, delay);
 
-    }
-  }
+  //   }
+  // }
 
   //--- Three.js ---//
 
@@ -188,8 +189,8 @@ $(function(){
     // create a point light
     var pointLight = new THREE.PointLight( 0xFFFFFF );
     // set its position
-    pointLight.position.x = 10;
-    pointLight.position.y = 50;
+    pointLight.position.x = 90;
+    pointLight.position.y = 110;
     pointLight.position.z = 100;
 
     // add to the scene
@@ -202,11 +203,17 @@ $(function(){
     renderer.render(scene, camera);
 
     $('canvas').on('mousemove',function(e) {
-      pointLight.position.x = e.offsetX - WIDTH/2;
-      pointLight.position.y = HEIGHT/2 - e.offsetY;
-      earthMesh.rotation.y = (e.offsetX - WIDTH/2) / 100;
-      earthMesh.rotation.x = (e.offsetY - WIDTH/2) / 100;
+      // pointLight.position.x = e.offsetX - WIDTH/2;
+      // pointLight.position.y = HEIGHT/2 - e.offsetY;
+      earthMesh.rotation.y = (e.offsetX - WIDTH/2) / 260;
+      earthMesh.rotation.x = (e.offsetY) / 200;
       // camera.rotation.y = ((e.offsetX - WIDTH/2) * (Math.PI / 180)) / 50;
+      renderer.render(scene, camera);
+    });
+
+    sense.init().orientation(function(d){
+      earthMesh.rotation.x = d.beta / 60;
+      earthMesh.rotation.y = d.gamma / 20;
       renderer.render(scene, camera);
     });
 
@@ -216,24 +223,24 @@ $(function(){
 
   //--- Embed button ---//
 
-  $('.embedLink').on('click',function(e) {
-    e.preventDefault();
-    if ($embed.hasClass('visible')) {
-      $embed.animate({bottom:'-200px'},'slow').fadeOut({queue:false}).removeClass('visible');
-    } else {
-      $embed.animate({bottom:'0px'},'slow').fadeIn({queue:false}).addClass('visible');
-    }
-  });
+  // $('.embedLink').on('click',function(e) {
+  //   e.preventDefault();
+  //   if ($embed.hasClass('visible')) {
+  //     $embed.animate({bottom:'-200px'},'slow').fadeOut({queue:false}).removeClass('visible');
+  //   } else {
+  //     $embed.animate({bottom:'0px'},'slow').fadeIn({queue:false}).addClass('visible');
+  //   }
+  // });
 
 
 
   //--- Reformat counter share number ---//
   
-  $('.social-likes').socialLikes().on('counter.social-likes', function(event, service, number) {
-    if(number > 0){
-      $('.social-likes__counter_'+service).text( si(number) );
-    }
-  });
+  // $('.social-likes').socialLikes().on('counter.social-likes', function(event, service, number) {
+  //   if(number > 0){
+  //     $('.social-likes__counter_'+service).text( si(number) );
+  //   }
+  // });
 
 
   init();
@@ -244,30 +251,30 @@ $(function(){
 
 //--- Add Linkedin to Social Likes ---//
 
-var socialLikesButtons = { // must be global because plugin requires it
-  linkedin: {
-    counterUrl: 'http://www.linkedin.com/countserv/count/share?url={url}',
-    counter: function(jsonUrl, deferred) {
-      'use strict';
-      var options = socialLikesButtons.linkedin;
-      if (!options._) {
-        options._ = {};
-        if (!window.IN) {
-          window.IN = {Tags: {}};
-        }
-        window.IN.Tags.Share = {
-          handleCount: function(params) {
-            var jsonUrl = options.counterUrl.replace(/{url}/g, encodeURIComponent(params.url));
-            options._[jsonUrl].resolve(params.count);
-          }
-        };
-      }
-      options._[jsonUrl] = deferred;
-      $.getScript(jsonUrl)
-      .fail(deferred.reject);
-    },
-    popupUrl: 'http://www.linkedin.com/shareArticle?mini=false&url={url}&title={title}',
-    popupWidth: 650,
-    popupHeight: 500
-  }
-};
+// var socialLikesButtons = { // must be global because plugin requires it
+//   linkedin: {
+//     counterUrl: 'http://www.linkedin.com/countserv/count/share?url={url}',
+//     counter: function(jsonUrl, deferred) {
+//       'use strict';
+//       var options = socialLikesButtons.linkedin;
+//       if (!options._) {
+//         options._ = {};
+//         if (!window.IN) {
+//           window.IN = {Tags: {}};
+//         }
+//         window.IN.Tags.Share = {
+//           handleCount: function(params) {
+//             var jsonUrl = options.counterUrl.replace(/{url}/g, encodeURIComponent(params.url));
+//             options._[jsonUrl].resolve(params.count);
+//           }
+//         };
+//       }
+//       options._[jsonUrl] = deferred;
+//       $.getScript(jsonUrl)
+//       .fail(deferred.reject);
+//     },
+//     popupUrl: 'http://www.linkedin.com/shareArticle?mini=false&url={url}&title={title}',
+//     popupWidth: 650,
+//     popupHeight: 500
+//   }
+// };
