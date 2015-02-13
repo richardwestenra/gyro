@@ -389,6 +389,12 @@ module.exports = function (grunt) {
           branch: 'master'
         }
       },
+      pages: {
+        options: {
+          remote: 'https://github.com/richardwestenra/gyro.git',
+          branch: 'gh-pages'
+        }
+      },
       local: {
         options: {
           remote: '../',
