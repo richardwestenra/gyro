@@ -61,75 +61,8 @@ $(function(){
   //--- Init ---//
 
   function init(){
-    // gyro();
     threeDemo();
   }
-
-
-  
-  //--- Gyro detection ---//
-
-  // function gyro(){
-
-  //   function left(n, k) {
-  //     k = k || 50;
-  //     return (n * k)+ 'px' ;
-  //   }
-  //   function z(n) {
-  //     n = (n / 360) || 0;
-  //     return left(n);
-  //   }
-  //   function x(n) {
-  //     n = (n / 180) || 0;
-  //     return left(n);
-  //   }
-  //   function y(n) {
-  //     n = (n / 90) || 0;
-  //     return left(n);
-  //   }
-
-  //   window.ondeviceorientation = function(event) {
-  //     alpha = Math.round(event.alpha);
-  //     beta = Math.round(event.beta);
-  //     gamma = Math.round(event.gamma);
-  //   };
-      
-    
-  //   if (window.DeviceMotionEvent===undefined) {
-
-  //     $('<p>',{
-  //       class: 'browsehappy',
-  //       text: 'Your browser does not support Device Orientation and Motion API. Try this sample with iPhone, iPod or iPad with iOS 4.2+.'
-  //     }).prependTo('body');
-
-  //   } else {
-
-  //     setInterval(function() {
-
-  //       $('#values').text('Alpha: ' + alpha +', Beta: ' + beta + ', Gamma: ' + gamma);
-
-  //       $('#alpha')
-  //         .text('Alpha: ' + alpha)
-  //         .css({
-  //           'left': z(alpha,100)
-  //         });
-
-  //       $('#beta')
-  //         .text('Beta: ' + beta)
-  //         .css({
-  //           'left': x(beta)
-  //         });
-
-  //       $('#gamma')
-  //         .text('Gamma: ' + gamma)
-  //         .css({
-  //           'left': y(gamma)
-  //         });
-
-  //     }, delay);
-
-  //   }
-  // }
 
   //--- Three.js ---//
 
@@ -178,6 +111,25 @@ $(function(){
     var material  = new THREE.MeshPhongMaterial();
     material.map = THREE.ImageUtils.loadTexture('images/earthmap1k.jpg');
     var earthMesh = new THREE.Mesh(geometry, material);
+
+    material.bumpMap = THREE.ImageUtils.loadTexture('images/earthbump1k.jpg');
+    material.bumpScale = 0.05;
+
+    material.specularMap    = THREE.ImageUtils.loadTexture('images/earthspec1k.jpg');
+    material.specular  = new THREE.Color('grey');
+
+    var geometry2   = new THREE.SphereGeometry(radius * 1.01, segments, rings);
+    var material2 = new THREE.MeshPhongMaterial({
+      // map: new THREE.Texture(canvasCloud),
+      map: THREE.ImageUtils.loadTexture('images/earthcloudmap.jpg'),
+      side: THREE.DoubleSide,
+      opacity: 0.3,
+      transparent: true,
+      depthWrite: false
+    });
+    var cloudMesh = new THREE.Mesh(geometry2, material2);
+    earthMesh.add(cloudMesh);
+
 
     // add the sphere to the scene
     scene.add(earthMesh);
