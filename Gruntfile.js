@@ -241,8 +241,14 @@ module.exports = function (grunt) {
           '<%= config.dist %>',
           '<%= config.dist %>/images',
           '<%= config.dist %>/styles'
-        ]
+        ],
+        patterns: {
+          js: [
+            [/(images\/.*?\.(?:jpg))/gm, 'Update the JS to reference data CSV']
+          ]
+        }
       },
+      js: ['<%= config.dist %>/scripts/{,*/}*.js'],
       html: ['<%= config.dist %>/{,*/}*.html'],
       css: ['<%= config.dist %>/styles/{,*/}*.css']
     },
@@ -356,24 +362,6 @@ module.exports = function (grunt) {
     },
 
     /* jshint camelcase:false */
-    // Deploy with FTP
-    ftp_push: {
-      your_target: {
-        options: {
-          authKey: 'ftphost',
-          host: 'forsyth.dreamhost.com',
-          // port: 21,
-          dest: '/mash-tun.net/photoworld/snapchat/'
-        },
-        files: [ // Enable Dynamic Expansion, Src matches are relative to this path, Actual Pattern(s) to match
-          {
-            expand: true,
-            // cwd: 'test',
-            src: ['<%= config.dist %>','<%= config.dist %>/**/*']
-          }
-        ]
-      }
-    },
 
     // Deploy with git
     buildcontrol: {
@@ -383,15 +371,9 @@ module.exports = function (grunt) {
         push: true,
         message: 'Built %sourceName% from commit %sourceCommit% on branch %sourceBranch%'
       },
-      stage: {
-        options: {
-          remote: 'clafro2@forsyth.dreamhost.com:mash-tun.net/photoworld/snapchat/.git',
-          branch: 'master'
-        }
-      },
       pages: {
         options: {
-          remote: 'https://github.com/richardwestenra/gyro.git',
+          remote: 'git@github.com:richardwestenra/gyro.git',
           branch: 'gh-pages'
         }
       },
@@ -512,15 +494,9 @@ module.exports = function (grunt) {
     'notify:build'
   ]);
 
-  grunt.registerTask('ftp', [
-    'default',
-    'ftp_push',
-    'notify:deploy'
-  ]);
-
   grunt.registerTask('deploy', [
     'default',
-    'buildcontrol:stage',
+    'buildcontrol:pages',
     'notify:deploy'
   ]);
 
