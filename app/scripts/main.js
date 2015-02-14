@@ -1,5 +1,5 @@
 // jshint devel:true
-/* globals THREE, sense */
+/* globals THREE, THREEx, sense */
 
 $(function(){
 	'use strict';
@@ -33,7 +33,7 @@ $(function(){
   //--- Global variables ---//
 
   // var $embed = $('#embed');
-  var $window = $(window);
+  // var $window = $(window);
 
   // Gyro vars:
   // var delay = 100,
@@ -43,17 +43,17 @@ $(function(){
 
   // Three vars: 
   // set the scene size
-  var WIDTH = $window.width() || 900,
-    HEIGHT = $window.height() || 600;
+  // var WIDTH = $window.width() || 900,
+  //   HEIGHT = $window.height() || 600;
 
   // set some camera attributes
-  var VIEW_ANGLE = 45,
-    ASPECT = WIDTH / HEIGHT,
-    NEAR = 0.1,
-    FAR = 10000;
+  // var VIEW_ANGLE = 45,
+  //   ASPECT = WIDTH / HEIGHT,
+  //   NEAR = 0.1,
+  //   FAR = 10000;
 
   // get the DOM element to attach to - assume we've got jQuery to hand
-  var $container = $('#container');
+  // var $container = $('#container');
 
 
 
@@ -68,105 +68,260 @@ $(function(){
 
   function threeDemo(){
 
-    // create a WebGL renderer, camera
-    // and a scene
-    var renderer = new THREE.WebGLRenderer();
-    var camera = new THREE.PerspectiveCamera(  VIEW_ANGLE,
-      ASPECT,
-      NEAR,
-      FAR  );
-    var scene = new THREE.Scene();
+    // // create a WebGL renderer, camera
+    // // and a scene
+    // var renderer = new THREE.WebGLRenderer();
+    // var camera = new THREE.PerspectiveCamera(  VIEW_ANGLE,
+    //   ASPECT,
+    //   NEAR,
+    //   FAR  );
+    // var scene = new THREE.Scene();
 
-    // the camera starts at 0,0,0 so pull it back
-    camera.position.z = 300;
+    // // the camera starts at 0,0,0 so pull it back
+    // camera.position.z = 300;
 
-    // start the renderer
-    renderer.setSize(WIDTH, HEIGHT);
+    // // start the renderer
+    // renderer.setSize(WIDTH, HEIGHT);
 
-    // attach the render-supplied DOM element
-    $container.append(renderer.domElement);
+    // // attach the render-supplied DOM element
+    // $container.append(renderer.domElement);
 
-    // create the sphere's material
-    // var sphereMaterial = new THREE.MeshLambertMaterial(
-    // {
-    //  color: 0xCC0000
+    // // create the sphere's material
+    // // var sphereMaterial = new THREE.MeshLambertMaterial(
+    // // {
+    // //  color: 0xCC0000
+    // // });
+
+
+    // // set up the sphere vars
+    // var radius = 50, segments = 16, rings = 16;
+
+    // // create a new mesh with sphere geometry -
+    // // we will cover the sphereMaterial next!
+    // // var sphere = new THREE.Mesh(
+    // //  new THREE.SphereGeometry(
+    // //    radius,
+    // //    segments,
+    // //    rings
+    // //  ),
+    // //  sphereMaterial
+    // // );
+
+    // var geometry  = new THREE.SphereGeometry(radius, segments, rings);
+    // var material = new THREE.MeshPhongMaterial();
+    // material.map = THREE.ImageUtils.loadTexture('images/earthmap1k.jpg');
+    // var earthMesh = new THREE.Mesh(geometry, material);
+
+    // material.bumpMap = THREE.ImageUtils.loadTexture('images/earthbump1k.jpg');
+    // material.bumpScale = 0.05;
+
+    // material.specularMap   = THREE.ImageUtils.loadTexture('images/earthspec1k.jpg');
+    // material.specular = new THREE.Color('grey');
+
+    // var geometry2  = new THREE.SphereGeometry(radius * 1.01, segments, rings);
+    // var material2 = new THREE.MeshPhongMaterial({
+    //   // map: new THREE.Texture(canvasCloud),
+    //   map: THREE.ImageUtils.loadTexture('images/earthcloudmap.jpg'),
+    //   side: THREE.DoubleSide,
+    //   opacity: 0.3,
+    //   transparent: true,
+    //   depthWrite: false
     // });
+    // var cloudMesh = new THREE.Mesh(geometry2, material2);
+    // earthMesh.add(cloudMesh);
 
 
-    // set up the sphere vars
-    var radius = 50, segments = 16, rings = 16;
+    // // add the sphere to the scene
+    // scene.add(earthMesh);
+    // // scene.add(sphere);
 
-    // create a new mesh with sphere geometry -
-    // we will cover the sphereMaterial next!
-    // var sphere = new THREE.Mesh(
-    //  new THREE.SphereGeometry(
-    //    radius,
-    //    segments,
-    //    rings
-    //  ),
-    //  sphereMaterial
-    // );
+    // // and the camera
+    // scene.add(camera);
 
-    var geometry   = new THREE.SphereGeometry(radius, segments, rings);
-    var material  = new THREE.MeshPhongMaterial();
-    material.map = THREE.ImageUtils.loadTexture('images/earthmap1k.jpg');
-    var earthMesh = new THREE.Mesh(geometry, material);
+    // // create a point light
+    // var pointLight = new THREE.PointLight( 0xFFFFFF );
+    // // set its position
+    // pointLight.position.x = 90;
+    // pointLight.position.y = 110;
+    // pointLight.position.z = 100;
 
-    material.bumpMap = THREE.ImageUtils.loadTexture('images/earthbump1k.jpg');
-    material.bumpScale = 0.05;
+    // // add to the scene
+    // scene.add(pointLight);
 
-    material.specularMap    = THREE.ImageUtils.loadTexture('images/earthspec1k.jpg');
-    material.specular  = new THREE.Color('grey');
+    // var light = new THREE.AmbientLight( 0x777777 );
+    // scene.add(light);
 
-    var geometry2   = new THREE.SphereGeometry(radius * 1.01, segments, rings);
-    var material2 = new THREE.MeshPhongMaterial({
-      // map: new THREE.Texture(canvasCloud),
-      map: THREE.ImageUtils.loadTexture('images/earthcloudmap.jpg'),
-      side: THREE.DoubleSide,
-      opacity: 0.3,
-      transparent: true,
-      depthWrite: false
+    // // draw!
+    // renderer.render(scene, camera);
+
+
+
+
+    THREEx.Planets.baseURL  = '../bower_components/threex.planets/';
+
+    var renderer = new THREE.WebGLRenderer({
+      antialias : true
     });
-    var cloudMesh = new THREE.Mesh(geometry2, material2);
-    earthMesh.add(cloudMesh);
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild( renderer.domElement );
+    renderer.shadowMapEnabled = true;
+    
+    var onRenderFcts= [];
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 100 );
+    camera.position.z = 1;
+
+    var light = new THREE.AmbientLight( 0x222222 );
+    scene.add( light );
+
+    light = new THREE.DirectionalLight( 0xffffff, 1 );
+    light.position.set(5,5,5);
+    scene.add( light );
+    light.castShadow = true;
+    light.shadowCameraNear = 0.01;
+    light.shadowCameraFar = 15;
+    light.shadowCameraFov = 45;
+
+    light.shadowCameraLeft = -1;
+    light.shadowCameraRight =  1;
+    light.shadowCameraTop =  1;
+    light.shadowCameraBottom = -1;
+    // light.shadowCameraVisible = true;
+
+    light.shadowBias = 0.001;
+    light.shadowDarkness = 0.2;
+
+    light.shadowMapWidth = 1024;
+    light.shadowMapHeight = 1024;
+    
 
 
-    // add the sphere to the scene
-    scene.add(earthMesh);
-    // scene.add(sphere);
+    //--- added starfield ---//
+    
+    var starSphere = THREEx.Planets.createStarfield();
+    scene.add(starSphere);
 
-    // and the camera
-    scene.add(camera);
 
-    // create a point light
-    var pointLight = new THREE.PointLight( 0xFFFFFF );
-    // set its position
-    pointLight.position.x = 90;
-    pointLight.position.y = 110;
-    pointLight.position.z = 100;
 
-    // add to the scene
-    scene.add(pointLight);
+    //--- add an object and make it move ---//
 
-    var light = new THREE.AmbientLight( 0x777777 );
-    scene.add(light);
+    // var datGUI = new dat.GUI()
 
-    // draw!
-    renderer.render(scene, camera);
+    var containerEarth = new THREE.Object3D();
+    containerEarth.rotateZ(-23.4 * Math.PI/180);
+    containerEarth.position.z = 0;
+    scene.add(containerEarth);
+    var moonMesh = THREEx.Planets.createMoon();
+    moonMesh.position.set(0.5,0.5,0.5);
+    moonMesh.scale.multiplyScalar(1/5);
+    moonMesh.receiveShadow = true;
+    moonMesh.castShadow = true;
+    containerEarth.add(moonMesh);
+
+    var earthMesh = THREEx.Planets.createEarth();
+    earthMesh.receiveShadow = true;
+    earthMesh.castShadow = true;
+    containerEarth.add(earthMesh);
+    onRenderFcts.push(function(delta){
+      earthMesh.rotation.y += 1/32 * delta;
+    });
+
+    var geometry = new THREE.SphereGeometry(0.5, 32, 32);
+    var material = THREEx.createAtmosphereMaterial();
+    material.uniforms.glowColor.value.set(0x00b3ff);
+    material.uniforms.coeficient.value = 0.8;
+    material.uniforms.power.value  = 2.0;
+    var mesh = new THREE.Mesh(geometry, material );
+    mesh.scale.multiplyScalar(1.01);
+    containerEarth.add( mesh );
+    // new THREEx.addAtmosphereMaterial2DatGui(material, datGUI);
+
+    geometry = new THREE.SphereGeometry(0.5, 32, 32);
+    material = THREEx.createAtmosphereMaterial();
+    material.side = THREE.BackSide;
+    material.uniforms.glowColor.value.set(0x00b3ff);
+    material.uniforms.coeficient.value = 0.5;
+    material.uniforms.power.value  = 4.0;
+    mesh = new THREE.Mesh(geometry, material );
+    mesh.scale.multiplyScalar(1.15);
+    containerEarth.add( mesh );
+    // new THREEx.addAtmosphereMaterial2DatGui(material, datGUI);
+
+    var earthCloud = THREEx.Planets.createEarthCloud();
+    earthCloud.receiveShadow = true;
+    earthCloud.castShadow = true;
+    containerEarth.add(earthCloud);
+    onRenderFcts.push(function(delta){
+      earthCloud.rotation.y += 1/8 * delta;   
+    });
+
+
+
+    //--- Camera Controls ---//
+
+    var mouse = {x : 0, y : 0};
+    document.addEventListener('mousemove', function(event){
+      mouse.x = (event.clientX / window.innerWidth ) - 0.5;
+      mouse.y = (event.clientY / window.innerHeight) - 0.5;
+    }, false);
+    onRenderFcts.push(function(delta){
+      camera.position.x += (mouse.x*5 - camera.position.x) * (delta*3);
+      camera.position.y += (mouse.y*5 - camera.position.y) * (delta*3);
+      camera.lookAt( scene.position );
+    });
+
+
+
+
+    //--- render the scene ---//
+
+    onRenderFcts.push(function(){
+      renderer.render( scene, camera );
+    });
+    
+
+
+    //--- loop runner ---//
+
+    var lastTimeMsec= null;
+    requestAnimationFrame(function animate(nowMsec){
+      // keep looping
+      requestAnimationFrame( animate );
+      // measure time
+      lastTimeMsec = lastTimeMsec || nowMsec-1000/60;
+      var deltaMsec = Math.min(200, nowMsec - lastTimeMsec);
+      lastTimeMsec = nowMsec;
+      // call each update function
+      onRenderFcts.forEach(function(onRenderFct){
+        onRenderFct(deltaMsec/1000, nowMsec/1000);
+      });
+    });
+
+
+
+
+
+    //--- Rotate on mousemove ---//
 
     $('canvas').on('mousemove',function(e) {
+      console.log(e);
       // pointLight.position.x = e.offsetX - WIDTH/2;
       // pointLight.position.y = HEIGHT/2 - e.offsetY;
-      earthMesh.rotation.y = (e.offsetX - WIDTH/2) / 260;
-      earthMesh.rotation.x = (e.offsetY) / 200;
-      // camera.rotation.y = ((e.offsetX - WIDTH/2) * (Math.PI / 180)) / 50;
-      renderer.render(scene, camera);
+      // earthMesh.rotation.y = (e.offsetX - WIDTH/2) / 260;
+      // earthMesh.rotation.x = (e.offsetY) / 200;
+      // // camera.rotation.y = ((e.offsetX - WIDTH/2) * (Math.PI / 180)) / 50;
+      // renderer.render(scene, camera);
     });
 
+
+
+    //--- Rotate using gyros ---//
+
     sense.init().orientation(function(d){
-      earthMesh.rotation.x = d.beta / 60;
-      earthMesh.rotation.y = d.gamma / 20;
-      renderer.render(scene, camera);
+      console.log(d);
+      // earthMesh.rotation.x = d.beta / 60;
+      // earthMesh.rotation.y = d.gamma / 20;
+      // renderer.render(scene, camera);
     });
 
   }

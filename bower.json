@@ -7,7 +7,9 @@
     "respond": "~1.4.2",
     "social-likes": "~3.0.4",
     "threejs": "*",
-    "sense-js": "git://github.com/ehzhang/sense-js.git"
+    "dat-gui": "~0.5.1",
+    "sense-js": "git://github.com/ehzhang/sense-js.git",
+    "threex.planets": "*"
   },
   "overrides": {
     "social-likes": {
@@ -15,6 +17,13 @@
     },
     "sense-js": {
       "main": "public/js/sense.js"
+    },
+    "threex.planets": {
+      "main": [
+        "threex.planets.js",
+        "threex.atmospherematerial.js",
+        "threex.atmospheredatgui.js"
+      ]
     }
   }
 }
