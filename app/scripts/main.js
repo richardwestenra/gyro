@@ -156,7 +156,27 @@ $(function(){
       earthCloud.rotation.y += 1/20 * delta;   
     });
 
+    // Load in the mesh and add it to the scene.
+    var loader = new THREE.JSONLoader();
+    loader.load('scripts/models/treehouse_logo.js', function(geometry){
+      material = new THREE.MeshLambertMaterial({color: 0x55B663});
+      var logoMesh = new THREE.Mesh(geometry, material);
 
+      var logo = { x: -1, y: 0, z: 0, angle: 0, altitude: 0.7 };
+      logoMesh.position.set(logo.x, logo.y, logo.z);
+      logoMesh.scale.multiplyScalar(0.1);
+      scene.add(logoMesh);
+
+      onRenderFcts.push(function(delta){
+        var orbitSpeed = 1;
+        logo.angle -= orbitSpeed * delta;
+        logo.x = logo.altitude * Math.cos(logo.angle);
+        logo.y = logo.altitude * Math.sin(logo.angle);
+        logoMesh.position.set(logo.x, logo.y, logo.z);
+        logoMesh.rotation.x += orbitSpeed * delta;
+        logoMesh.rotation.z += orbitSpeed * delta * 1/3;
+      });
+    });
 
     //--- Camera Controls ---//
 
@@ -170,8 +190,8 @@ $(function(){
     // Rotate using gyros:
     sense.init().orientation(function(d){
       // Hope this works:
-      mouse.x = d.beta / 60;
-      mouse.y = d.gamma / 20;
+      mouse.x = d.gamma / 20;
+      mouse.y = d.beta / 60;
     });
 
     var cam = { alt: 2, spin: 4 };

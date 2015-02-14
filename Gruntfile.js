@@ -137,6 +137,7 @@ module.exports = function (grunt) {
         'Gruntfile.js',
         '<%= config.app %>/scripts/{,*/}*.js',
         '!<%= config.app %>/scripts/vendor/*',
+        '!<%= config.app %>/scripts/models/*',
         'test/spec/{,*/}*.js'
       ]
     },
@@ -244,7 +245,8 @@ module.exports = function (grunt) {
         ],
         patterns: {
           js: [
-            [/(images\/.*?\.(?:jpg))/gm, 'Update the JS to reference data CSV']
+            [/(images\/.*?\.(?:jpg))/gm, 'Parse JS for revved images'],
+            [/(models\/.*?\.(?:js))/gm, 'Parse JS for revved js files']
           ]
         }
       },
