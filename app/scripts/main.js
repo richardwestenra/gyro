@@ -171,15 +171,11 @@ $(function(){
     var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 100 );
     camera.position.z = 2;
 
-    function render() {
-      renderer.render( scene, camera );
-      // stats.update();
-    }
-    var controls = new THREE.OrbitControls( camera );
-    controls.damping = 0.2;
-    controls.addEventListener( 'change', render );
-
-    // controls.addEventListener( 'change', render );
+    // var controls = new THREE.OrbitControls( camera );
+    // controls.damping = 0.2;
+    // controls.addEventListener('change', function() {
+    //   renderer.render( scene, camera );
+    // });
 
     var light = new THREE.AmbientLight( 0x111111 );
     scene.add( light );
@@ -221,12 +217,21 @@ $(function(){
     containerEarth.rotateZ(-23.4 * Math.PI/180);
     containerEarth.position.z = 0;
     scene.add(containerEarth);
-    // var moonMesh = THREEx.Planets.createMoon();
-    // moonMesh.position.set(0.5,0.5,0.5);
-    // moonMesh.scale.multiplyScalar(1/5);
-    // moonMesh.receiveShadow = true;
-    // moonMesh.castShadow = true;
-    // containerEarth.add(moonMesh);
+    var moon = { x: 0, y: 0, z: 0, angle: 0, altitude: 1 };
+    var moonMesh = THREEx.Planets.createMoon();
+    moonMesh.position.set(moon.x, moon.y, moon.z);
+    moonMesh.scale.multiplyScalar(1/5);
+    moonMesh.receiveShadow = true;
+    moonMesh.castShadow = true;
+    containerEarth.add(moonMesh);
+    onRenderFcts.push(function(delta){
+      var orbitSpeed = 1/5;
+      moon.angle -= orbitSpeed * delta;
+      moon.x = moon.altitude * Math.cos(moon.angle);
+      moon.z = moon.altitude * Math.sin(moon.angle) - 0.03;
+      moonMesh.position.set(moon.x, moon.y, moon.z);
+      moonMesh.rotation.y += orbitSpeed * delta;
+    });
 
     var earthMesh = THREEx.Planets.createEarth();
     earthMesh.receiveShadow = true;
@@ -269,20 +274,20 @@ $(function(){
 
     //--- Camera Controls ---//
 
-    // var mouse = {x: 0, y: 0};
-    // document.addEventListener('mousemove', function(event){
-    //   mouse.x = (event.clientX / window.innerWidth ) - 0.5;
-    //   mouse.y = (event.clientY / window.innerHeight) - 0.5;
-    // }, false);
+    var mouse = {x: 0, y: 0};
+    document.addEventListener('mousemove', function(event){
+      mouse.x = (event.clientX / window.innerWidth ) - 0.5;
+      mouse.y = (event.clientY / window.innerHeight) - 0.5;
+    }, false);
 
-    // onRenderFcts.push(function(delta){
-    //   camera.position.x += (mouse.x*5 - camera.position.x) * (delta*3);
-    //   camera.position.y += (mouse.y*5 - camera.position.y) * (delta*3);
+    onRenderFcts.push(function(delta){
+      camera.position.x += (mouse.x*5 - camera.position.x) * (delta*3);
+      camera.position.y += (mouse.y*5 - camera.position.y) * (delta*3);
 
-    //   // camera.position.x = mouse.x*5 * Math.cos(delta) + mouse.x * Math.sin(delta);
-    //   // camera.position.z = mouse.x*5 * Math.cos(delta) - mouse.x * Math.sin(delta);
-    //   camera.lookAt( scene.position );
-    // });
+      // camera.position.x = mouse.x*5 * Math.cos(delta) + mouse.x * Math.sin(delta);
+      // camera.position.z = mouse.x*5 * Math.cos(delta) - mouse.x * Math.sin(delta);
+      camera.lookAt( scene.position );
+    });
 
 
 
