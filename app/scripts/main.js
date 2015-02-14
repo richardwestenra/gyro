@@ -156,7 +156,7 @@ $(function(){
       earthCloud.rotation.y += 1/20 * delta;   
     });
 
-    // Load in the mesh and add it to the scene.
+    // Load Treehouse logo mesh and add it to the scene.
     var loader = new THREE.JSONLoader();
     loader.load('scripts/models/treehouse_logo.js', function(geometry){
       material = new THREE.MeshLambertMaterial({color: 0x55B663});
@@ -175,6 +175,26 @@ $(function(){
         logoMesh.position.set(logo.x, logo.y, logo.z);
         logoMesh.rotation.x += orbitSpeed * delta;
         logoMesh.rotation.z += orbitSpeed * delta * 1/3;
+      });
+    });
+
+    // Load ISS mesh and add it to the scene
+    loader.load('scripts/models/iss.json', function(geometry){
+      material = new THREE.MeshLambertMaterial({color: 0x55B663});
+      var issMesh = new THREE.Mesh(geometry, material);
+
+      var iss = { x: 1, y: 0, z: 0, angle: 0, altitude: 0.7 };
+      issMesh.position.set(iss.x, iss.y, iss.z);
+      // issMesh.scale.multiplyScalar(0.1);
+      scene.add(issMesh);
+
+      onRenderFcts.push(function(delta){
+        var orbitSpeed = 1;
+        iss.angle -= orbitSpeed * delta;
+        iss.x = iss.altitude * Math.cos(iss.angle);
+        iss.z = iss.altitude * Math.sin(iss.angle);
+        issMesh.position.set(iss.x, iss.y, iss.z);
+        issMesh.rotation.y += orbitSpeed * delta;
       });
     });
 
