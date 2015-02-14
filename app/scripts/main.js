@@ -169,12 +169,22 @@ $(function(){
     var onRenderFcts= [];
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 100 );
-    camera.position.z = 1;
+    camera.position.z = 2;
 
-    var light = new THREE.AmbientLight( 0x222222 );
+    function render() {
+      renderer.render( scene, camera );
+      // stats.update();
+    }
+    var controls = new THREE.OrbitControls( camera );
+    controls.damping = 0.2;
+    controls.addEventListener( 'change', render );
+
+    // controls.addEventListener( 'change', render );
+
+    var light = new THREE.AmbientLight( 0x111111 );
     scene.add( light );
 
-    light = new THREE.DirectionalLight( 0xffffff, 1 );
+    light = new THREE.DirectionalLight( 0x888888, 1 );
     light.position.set(5,5,5);
     scene.add( light );
     light.castShadow = true;
@@ -211,12 +221,12 @@ $(function(){
     containerEarth.rotateZ(-23.4 * Math.PI/180);
     containerEarth.position.z = 0;
     scene.add(containerEarth);
-    var moonMesh = THREEx.Planets.createMoon();
-    moonMesh.position.set(0.5,0.5,0.5);
-    moonMesh.scale.multiplyScalar(1/5);
-    moonMesh.receiveShadow = true;
-    moonMesh.castShadow = true;
-    containerEarth.add(moonMesh);
+    // var moonMesh = THREEx.Planets.createMoon();
+    // moonMesh.position.set(0.5,0.5,0.5);
+    // moonMesh.scale.multiplyScalar(1/5);
+    // moonMesh.receiveShadow = true;
+    // moonMesh.castShadow = true;
+    // containerEarth.add(moonMesh);
 
     var earthMesh = THREEx.Planets.createEarth();
     earthMesh.receiveShadow = true;
@@ -241,7 +251,7 @@ $(function(){
     material.side = THREE.BackSide;
     material.uniforms.glowColor.value.set(0x00b3ff);
     material.uniforms.coeficient.value = 0.5;
-    material.uniforms.power.value  = 4.0;
+    material.uniforms.power.value  = 22;
     mesh = new THREE.Mesh(geometry, material );
     mesh.scale.multiplyScalar(1.15);
     containerEarth.add( mesh );
@@ -252,23 +262,27 @@ $(function(){
     earthCloud.castShadow = true;
     containerEarth.add(earthCloud);
     onRenderFcts.push(function(delta){
-      earthCloud.rotation.y += 1/8 * delta;   
+      earthCloud.rotation.y += 1/20 * delta;   
     });
 
 
 
     //--- Camera Controls ---//
 
-    var mouse = {x : 0, y : 0};
-    document.addEventListener('mousemove', function(event){
-      mouse.x = (event.clientX / window.innerWidth ) - 0.5;
-      mouse.y = (event.clientY / window.innerHeight) - 0.5;
-    }, false);
-    onRenderFcts.push(function(delta){
-      camera.position.x += (mouse.x*5 - camera.position.x) * (delta*3);
-      camera.position.y += (mouse.y*5 - camera.position.y) * (delta*3);
-      camera.lookAt( scene.position );
-    });
+    // var mouse = {x: 0, y: 0};
+    // document.addEventListener('mousemove', function(event){
+    //   mouse.x = (event.clientX / window.innerWidth ) - 0.5;
+    //   mouse.y = (event.clientY / window.innerHeight) - 0.5;
+    // }, false);
+
+    // onRenderFcts.push(function(delta){
+    //   camera.position.x += (mouse.x*5 - camera.position.x) * (delta*3);
+    //   camera.position.y += (mouse.y*5 - camera.position.y) * (delta*3);
+
+    //   // camera.position.x = mouse.x*5 * Math.cos(delta) + mouse.x * Math.sin(delta);
+    //   // camera.position.z = mouse.x*5 * Math.cos(delta) - mouse.x * Math.sin(delta);
+    //   camera.lookAt( scene.position );
+    // });
 
 
 
@@ -303,22 +317,21 @@ $(function(){
 
     //--- Rotate on mousemove ---//
 
-    $('canvas').on('mousemove',function(e) {
-      console.log(e);
-      // pointLight.position.x = e.offsetX - WIDTH/2;
-      // pointLight.position.y = HEIGHT/2 - e.offsetY;
-      // earthMesh.rotation.y = (e.offsetX - WIDTH/2) / 260;
-      // earthMesh.rotation.x = (e.offsetY) / 200;
-      // // camera.rotation.y = ((e.offsetX - WIDTH/2) * (Math.PI / 180)) / 50;
-      // renderer.render(scene, camera);
-    });
+    // $('canvas').on('mousemove',function(e) {
+    //   console.log(e);
+    //   // pointLight.position.x = e.offsetX - WIDTH/2;
+    //   // pointLight.position.y = HEIGHT/2 - e.offsetY;
+    //   // earthMesh.rotation.y = (e.offsetX - WIDTH/2) / 260;
+    //   // earthMesh.rotation.x = (e.offsetY) / 200;
+    //   // // camera.rotation.y = ((e.offsetX - WIDTH/2) * (Math.PI / 180)) / 50;
+    //   // renderer.render(scene, camera);
+    // });
 
 
 
     //--- Rotate using gyros ---//
 
-    sense.init().orientation(function(d){
-      console.log(d);
+    sense.init().orientation(function(){
       // earthMesh.rotation.x = d.beta / 60;
       // earthMesh.rotation.y = d.gamma / 20;
       // renderer.render(scene, camera);
