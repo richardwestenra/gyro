@@ -32,31 +32,6 @@ $(function(){
 
   //--- Global variables ---//
 
-  // var $embed = $('#embed');
-  // var $window = $(window);
-
-  // Gyro vars:
-  // var delay = 100,
-  //   alpha = 0,
-  //   beta = 0,
-  //   gamma = 0;
-
-  // Three vars: 
-  // set the scene size
-  // var WIDTH = $window.width() || 900,
-  //   HEIGHT = $window.height() || 600;
-
-  // set some camera attributes
-  // var VIEW_ANGLE = 45,
-  //   ASPECT = WIDTH / HEIGHT,
-  //   NEAR = 0.1,
-  //   FAR = 10000;
-
-  // get the DOM element to attach to - assume we've got jQuery to hand
-  // var $container = $('#container');
-
-
-
 
   //--- Init ---//
 
@@ -68,96 +43,7 @@ $(function(){
 
   function threeDemo(){
 
-    // // create a WebGL renderer, camera
-    // // and a scene
-    // var renderer = new THREE.WebGLRenderer();
-    // var camera = new THREE.PerspectiveCamera(  VIEW_ANGLE,
-    //   ASPECT,
-    //   NEAR,
-    //   FAR  );
-    // var scene = new THREE.Scene();
-
-    // // the camera starts at 0,0,0 so pull it back
-    // camera.position.z = 300;
-
-    // // start the renderer
-    // renderer.setSize(WIDTH, HEIGHT);
-
-    // // attach the render-supplied DOM element
-    // $container.append(renderer.domElement);
-
-    // // create the sphere's material
-    // // var sphereMaterial = new THREE.MeshLambertMaterial(
-    // // {
-    // //  color: 0xCC0000
-    // // });
-
-
-    // // set up the sphere vars
-    // var radius = 50, segments = 16, rings = 16;
-
-    // // create a new mesh with sphere geometry -
-    // // we will cover the sphereMaterial next!
-    // // var sphere = new THREE.Mesh(
-    // //  new THREE.SphereGeometry(
-    // //    radius,
-    // //    segments,
-    // //    rings
-    // //  ),
-    // //  sphereMaterial
-    // // );
-
-    // var geometry  = new THREE.SphereGeometry(radius, segments, rings);
-    // var material = new THREE.MeshPhongMaterial();
-    // material.map = THREE.ImageUtils.loadTexture('images/earthmap1k.jpg');
-    // var earthMesh = new THREE.Mesh(geometry, material);
-
-    // material.bumpMap = THREE.ImageUtils.loadTexture('images/earthbump1k.jpg');
-    // material.bumpScale = 0.05;
-
-    // material.specularMap   = THREE.ImageUtils.loadTexture('images/earthspec1k.jpg');
-    // material.specular = new THREE.Color('grey');
-
-    // var geometry2  = new THREE.SphereGeometry(radius * 1.01, segments, rings);
-    // var material2 = new THREE.MeshPhongMaterial({
-    //   // map: new THREE.Texture(canvasCloud),
-    //   map: THREE.ImageUtils.loadTexture('images/earthcloudmap.jpg'),
-    //   side: THREE.DoubleSide,
-    //   opacity: 0.3,
-    //   transparent: true,
-    //   depthWrite: false
-    // });
-    // var cloudMesh = new THREE.Mesh(geometry2, material2);
-    // earthMesh.add(cloudMesh);
-
-
-    // // add the sphere to the scene
-    // scene.add(earthMesh);
-    // // scene.add(sphere);
-
-    // // and the camera
-    // scene.add(camera);
-
-    // // create a point light
-    // var pointLight = new THREE.PointLight( 0xFFFFFF );
-    // // set its position
-    // pointLight.position.x = 90;
-    // pointLight.position.y = 110;
-    // pointLight.position.z = 100;
-
-    // // add to the scene
-    // scene.add(pointLight);
-
-    // var light = new THREE.AmbientLight( 0x777777 );
-    // scene.add(light);
-
-    // // draw!
-    // renderer.render(scene, camera);
-
-
-
-
-    THREEx.Planets.baseURL  = '../bower_components/threex.planets/';
+    THREEx.Planets.baseURL  = '';
 
     var renderer = new THREE.WebGLRenderer({
       antialias : true
@@ -274,15 +160,27 @@ $(function(){
 
     //--- Camera Controls ---//
 
+    // Rotate on mousemove
     var mouse = {x: 0, y: 0};
     document.addEventListener('mousemove', function(event){
       mouse.x = (event.clientX / window.innerWidth ) - 0.5;
       mouse.y = (event.clientY / window.innerHeight) - 0.5;
     }, false);
 
+    // Rotate using gyros:
+    sense.init().orientation(function(d){
+      // Hope this works:
+      mouse.x = d.beta / 60;
+      mouse.y = d.gamma / 20;
+    });
+
+    var cam = { alt: 2, spin: 4 };
     onRenderFcts.push(function(delta){
-      camera.position.x += (mouse.x*5 - camera.position.x) * (delta*3);
+      // camera.position.x += (mouse.x*5 - camera.position.x) * (delta*3);
+
       camera.position.y += (mouse.y*5 - camera.position.y) * (delta*3);
+      camera.position.x = cam.alt * Math.cos(mouse.x * cam.spin);
+      camera.position.z = cam.alt * Math.sin(mouse.x * cam.spin);
 
       // camera.position.x = mouse.x*5 * Math.cos(delta) + mouse.x * Math.sin(delta);
       // camera.position.z = mouse.x*5 * Math.cos(delta) - mouse.x * Math.sin(delta);
@@ -316,31 +214,6 @@ $(function(){
       });
     });
 
-
-
-
-
-    //--- Rotate on mousemove ---//
-
-    // $('canvas').on('mousemove',function(e) {
-    //   console.log(e);
-    //   // pointLight.position.x = e.offsetX - WIDTH/2;
-    //   // pointLight.position.y = HEIGHT/2 - e.offsetY;
-    //   // earthMesh.rotation.y = (e.offsetX - WIDTH/2) / 260;
-    //   // earthMesh.rotation.x = (e.offsetY) / 200;
-    //   // // camera.rotation.y = ((e.offsetX - WIDTH/2) * (Math.PI / 180)) / 50;
-    //   // renderer.render(scene, camera);
-    // });
-
-
-
-    //--- Rotate using gyros ---//
-
-    sense.init().orientation(function(){
-      // earthMesh.rotation.x = d.beta / 60;
-      // earthMesh.rotation.y = d.gamma / 20;
-      // renderer.render(scene, camera);
-    });
 
   }
 
