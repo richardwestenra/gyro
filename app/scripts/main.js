@@ -45,6 +45,8 @@ $(function(){
 
     THREEx.Planets.baseURL  = '';
 
+    var geometry, material, mesh;
+
     var renderer = new THREE.WebGLRenderer({
       antialias : true
     });
@@ -86,6 +88,18 @@ $(function(){
     light.shadowMapWidth = 1024;
     light.shadowMapHeight = 1024;
     
+
+
+    //--- Add sun ---//
+
+    material = THREEx.createAtmosphereMaterial();
+    material.side = THREE.BackSide;
+    material.uniforms.glowColor.value.set(0xFFFFFA);
+    material.uniforms.coeficient.value = 0.1;
+    mesh = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), material );
+    mesh.position.set(50,1,50);
+    mesh.scale.multiplyScalar(3);
+    scene.add( mesh );
 
 
     //--- added starfield ---//
@@ -176,12 +190,12 @@ $(function(){
       earthMesh.rotation.y += 1/32 * delta;
     });
 
-    var geometry = new THREE.SphereGeometry(0.5, 32, 32);
-    var material = THREEx.createAtmosphereMaterial();
+    geometry = new THREE.SphereGeometry(0.5, 32, 32);
+    material = THREEx.createAtmosphereMaterial();
     material.uniforms.glowColor.value.set(0x00b3ff);
     material.uniforms.coeficient.value = 0.8;
     material.uniforms.power.value  = 2.0;
-    var mesh = new THREE.Mesh(geometry, material );
+    mesh = new THREE.Mesh(geometry, material );
     mesh.scale.multiplyScalar(1.01);
     containerEarth.add( mesh );
     // new THREEx.addAtmosphereMaterial2DatGui(material, datGUI);
@@ -262,9 +276,8 @@ $(function(){
 
     // Rotate using gyros:
     sense.init().orientation(function(d){
-      // Hope this works:
-      mouse.x = d.gamma / 20;
-      mouse.y = d.beta / 60;
+      mouse.x = d.gamma / 90;
+      mouse.y = (d.beta-90) / 180;
     });
 
     var cam = { alt: 2, spin: 4 };
