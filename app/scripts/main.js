@@ -97,6 +97,47 @@ $(function(){
 
     //--- add an object and make it move ---//
 
+    var satellite = new THREE.Object3D();
+    satellite.position.set(0.5,0,0.5);
+    satellite.scale.multiplyScalar(1/90);
+    scene.add(satellite);
+    var satMaterial = new THREE.MeshLambertMaterial({
+      side : THREE.DoubleSide,
+      color: 0xEEEEEE
+    });
+
+    var k = 1;
+    [-k,k].forEach(function(d){
+      var plane = new THREE.Mesh(new THREE.PlaneGeometry(k*2,k), satMaterial);
+      plane.overdraw = true;
+      plane.position.set(d*1.5,0,0);
+      satellite.add(plane);
+    });
+
+    k = 0.5;
+    var box = new THREE.Mesh(new THREE.BoxGeometry(k,k,k), satMaterial);
+    box.overdraw = true;
+    box.position.set(0,0,0);
+    satellite.add(box);
+
+    var sat = { x: -1, y: 0, z: 0, angle: 0, altitude: 0.55 };
+    onRenderFcts.push(function(delta){
+      var orbitSpeed = 1;
+      sat.angle -= orbitSpeed * delta;
+      sat.x = sat.altitude * Math.cos(sat.angle);
+      sat.y = sat.altitude * Math.sin(sat.angle);
+      sat.z = sat.altitude * Math.sin(sat.angle);
+      satellite.position.set(sat.x, sat.y, sat.z);
+      satellite.rotation.x += orbitSpeed * delta;
+      satellite.rotation.z -= orbitSpeed * delta;
+      satellite.rotation.y += orbitSpeed * delta;
+    });
+
+
+
+
+    //--- add an object and make it move ---//
+
     // var datGUI = new dat.GUI()
 
     var containerEarth = new THREE.Object3D();
@@ -157,46 +198,50 @@ $(function(){
     });
 
     // Load Treehouse logo mesh and add it to the scene.
-    var loader = new THREE.JSONLoader();
-    loader.load('scripts/models/treehouse_logo.js', function(geometry){
-      material = new THREE.MeshLambertMaterial({color: 0x55B663});
-      var logoMesh = new THREE.Mesh(geometry, material);
+    // var loader = new THREE.JSONLoader();
+    // loader.load('scripts/models/treehouse_logo.js', function(geometry){
+    //   material = new THREE.MeshLambertMaterial({color: 0x55B663});
+    //   var logoMesh = new THREE.Mesh(geometry, material);
 
-      var logo = { x: -1, y: 0, z: 0, angle: 0, altitude: 0.7 };
-      logoMesh.position.set(logo.x, logo.y, logo.z);
-      logoMesh.scale.multiplyScalar(0.1);
-      scene.add(logoMesh);
+    //   var logo = { x: -1, y: 0, z: 0, angle: 0, altitude: 0.7 };
+    //   logoMesh.position.set(logo.x, logo.y, logo.z);
+    //   logoMesh.scale.multiplyScalar(0.1);
+    //   scene.add(logoMesh);
 
-      onRenderFcts.push(function(delta){
-        var orbitSpeed = 1;
-        logo.angle -= orbitSpeed * delta;
-        logo.x = logo.altitude * Math.cos(logo.angle);
-        logo.y = logo.altitude * Math.sin(logo.angle);
-        logoMesh.position.set(logo.x, logo.y, logo.z);
-        logoMesh.rotation.x += orbitSpeed * delta;
-        logoMesh.rotation.z += orbitSpeed * delta * 1/3;
-      });
-    });
+    //   onRenderFcts.push(function(delta){
+    //     var orbitSpeed = 1;
+    //     logo.angle -= orbitSpeed * delta;
+    //     logo.x = logo.altitude * Math.cos(logo.angle);
+    //     logo.y = logo.altitude * Math.sin(logo.angle);
+    //     logoMesh.position.set(logo.x, logo.y, logo.z);
+    //     logoMesh.rotation.x += orbitSpeed * delta;
+    //     logoMesh.rotation.z += orbitSpeed * delta * 1/3;
+    //   });
+    // });
 
     // Load ISS mesh and add it to the scene
-    loader.load('scripts/models/iss.json', function(geometry){
-      material = new THREE.MeshLambertMaterial({color: 0x55B663});
-      var issMesh = new THREE.Mesh(geometry, material);
+    // var loader = new THREE.JSONLoader();
+    // var model = loader.parse( 'scripts/models/treehouse_logo.js' );
+    // var mesh = new THREE.Mesh( model.geometry, new THREE.MeshBasicMaterial() );
+    // scene.add( mesh );
+    // loader.load('scripts/models/iss.json', function(geometry){
+    //   var material = new THREE.MeshLambertMaterial({color: 0x55B663});
+    //   var issMesh = new THREE.Mesh(geometry, material);
 
-      var iss = { x: 1, y: 0, z: 0, angle: 0, altitude: 0.7 };
-      issMesh.position.set(iss.x, iss.y, iss.z);
-      // issMesh.scale.multiplyScalar(0.1);
-      scene.add(issMesh);
+    //   var iss = { x: 1, y: 0, z: 0, angle: 0, altitude: 0.7 };
+    //   issMesh.position.set(iss.x, iss.y, iss.z);
+    //   issMesh.scale.multiplyScalar(111);
+    //   scene.add(issMesh);
 
-      onRenderFcts.push(function(delta){
-        var orbitSpeed = 1;
-        iss.angle -= orbitSpeed * delta;
-        iss.x = iss.altitude * Math.cos(iss.angle);
-        iss.z = iss.altitude * Math.sin(iss.angle);
-        issMesh.position.set(iss.x, iss.y, iss.z);
-        issMesh.rotation.y += orbitSpeed * delta;
-      });
-    });
+    //   onRenderFcts.push(function(delta){
+    //     var orbitSpeed = 1;
+    //     iss.angle -= orbitSpeed * delta;
+    //     iss.x = iss.altitude * Math.cos(iss.angle);
+    //     iss.z = iss.altitude * Math.sin(iss.angle);
+    //     issMesh.position.set(iss.x, iss.y, iss.z);
+    //     issMesh.rotation.y += orbitSpeed * delta;
+    //   });
+    // });
 
     //--- Camera Controls ---//
 
