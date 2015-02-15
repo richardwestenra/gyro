@@ -67,7 +67,7 @@ $(function(){
     scene.add( light );
 
     light = new THREE.DirectionalLight( 0x888888, 1 );
-    light.position.set(5,5,5);
+    light.position.set(5,0.5,5);
     scene.add( light );
     light.castShadow = true;
     light.shadowCameraNear = 0.01;
@@ -81,7 +81,7 @@ $(function(){
     // light.shadowCameraVisible = true;
 
     light.shadowBias = 0.001;
-    light.shadowDarkness = 0.2;
+    light.shadowDarkness = 0.6;
 
     light.shadowMapWidth = 1024;
     light.shadowMapHeight = 1024;
@@ -97,8 +97,16 @@ $(function(){
 
     //--- add an object and make it move ---//
 
+    var sat = {
+      x: -1,
+      y: 0,
+      z: 0,
+      angle: 0,
+      altitude: 0.55,
+      speed: 3/4
+    };
     var satellite = new THREE.Object3D();
-    satellite.position.set(0.5,0,0.5);
+    satellite.position.set(sat.x, sat.y, sat.z);
     satellite.scale.multiplyScalar(1/90);
     scene.add(satellite);
     var satMaterial = new THREE.MeshLambertMaterial({
@@ -111,6 +119,7 @@ $(function(){
       var plane = new THREE.Mesh(new THREE.PlaneGeometry(k*2,k), satMaterial);
       plane.overdraw = true;
       plane.position.set(d*1.5,0,0);
+      plane.castShadow = true;
       satellite.add(plane);
     });
 
@@ -118,19 +127,18 @@ $(function(){
     var box = new THREE.Mesh(new THREE.BoxGeometry(k,k,k), satMaterial);
     box.overdraw = true;
     box.position.set(0,0,0);
+    box.castShadow = true;
     satellite.add(box);
 
-    var sat = { x: -1, y: 0, z: 0, angle: 0, altitude: 0.55 };
     onRenderFcts.push(function(delta){
-      var orbitSpeed = 1;
-      sat.angle -= orbitSpeed * delta;
+      sat.angle -= sat.speed * delta;
       sat.x = sat.altitude * Math.cos(sat.angle);
       sat.y = sat.altitude * Math.sin(sat.angle);
       sat.z = sat.altitude * Math.sin(sat.angle);
       satellite.position.set(sat.x, sat.y, sat.z);
-      satellite.rotation.x += orbitSpeed * delta;
-      satellite.rotation.z -= orbitSpeed * delta;
-      satellite.rotation.y += orbitSpeed * delta;
+      satellite.rotation.x += sat.speed * delta;
+      satellite.rotation.z -= sat.speed * delta;
+      satellite.rotation.y += sat.speed * delta;
     });
 
 
@@ -191,7 +199,7 @@ $(function(){
 
     var earthCloud = THREEx.Planets.createEarthCloud();
     earthCloud.receiveShadow = true;
-    earthCloud.castShadow = true;
+    // earthCloud.castShadow = true;
     containerEarth.add(earthCloud);
     onRenderFcts.push(function(delta){
       earthCloud.rotation.y += 1/20 * delta;   
