@@ -200,11 +200,13 @@ $(document).ready(function() {
   //   ctx.restore();
   // }
 
-  // function drawBird(obj, t, alpha) {
+  function drawBird(obj, t, alpha) {
     // ctx.save();
     // ctx.translate(alpha*obj.x + (1-alpha)*obj.xPrev, alpha*obj.y + (1-alpha)*obj.yPrev);
     // ctx.rotate(interpolateAngle(obj.aPrev, obj.a, alpha));
     // ctx.translate(-20, -20);
+
+    box.position.set(obj.x*10000, obj.y/999999, obj.z); //nbed
 
     // if (obj.dead === true) {
     //   ctx.drawImage(sheet, 171, 119, 20, 20, 0, 0, 40, 40);
@@ -220,11 +222,11 @@ $(document).ready(function() {
     //   }
     // }
     // ctx.restore();
-  // }
+  }
 
   var M = 1000000; // Mass constant??
   var G = 10; // Gravity constant???
-  var R = 100; // Radius constant?
+  var R = 1; // Radius constant?
 
   // var showHelp = true;
 
@@ -235,10 +237,13 @@ $(document).ready(function() {
   var objList = [];
   var alive = 0;
 
+  var box;
+
   function newBird() {
     var bird = {
       x : 0,
       y : -R*1.25,
+      z : 0,
       u: 0, // vertical velocity (up)?
       v: 0, // orbital velocity?
       a : -Math.PI/2, // angle?
@@ -251,27 +256,14 @@ $(document).ready(function() {
     bird.aPrev = bird.a;
 
 
-    // Load Treehouse logo mesh and add it to the scene.
-    var loader = new THREE.JSONLoader();
-    loader.load('scripts/models/treehouse_logo.js', function(geometry){
-      material = new THREE.MeshLambertMaterial({color: 0x55B663});
-      var logoMesh = new THREE.Mesh(geometry, material);
-
-      var logo = { x: -1, y: 0, z: 0, angle: 0, altitude: 0.7 };
-      logoMesh.position.set(logo.x, logo.y, logo.z);
-      logoMesh.scale.multiplyScalar(0.1);
-      scene.add(logoMesh);
-
-      // onRenderFcts.push(function(delta){
-      //   var orbitSpeed = 1;
-      //   logo.angle -= orbitSpeed * delta;
-      //   logo.x = logo.altitude * Math.cos(logo.angle);
-      //   logo.y = logo.altitude * Math.sin(logo.angle);
-      //   logoMesh.position.set(logo.x, logo.y, logo.z);
-      //   logoMesh.rotation.x += orbitSpeed * delta;
-      //   logoMesh.rotation.z += orbitSpeed * delta * 1/3;
-      // });
-    });
+    var k = 0.5;
+    box = new THREE.Mesh(new THREE.BoxGeometry(k,k,k), new THREE.MeshLambertMaterial({
+      side : THREE.DoubleSide,
+      color: 0xFF8888
+    }));
+    box.overdraw = true;
+    box.position.set(bird.x,bird.y,bird.z);
+    scene.add(box);
     
     objList.push(bird);
     return bird;
@@ -388,9 +380,9 @@ $(document).ready(function() {
 
       obj.t += dt;
 
-      if (D > 400 && obj.dead !== true) { // kill if out of range
-        killBird(obj);
-      }
+      // if (D > 400 && obj.dead !== true) { // kill if out of range
+      //   killBird(obj);
+      // }
 
     } else { // colliding
       obj.x = R*X/D;
@@ -491,9 +483,9 @@ $(document).ready(function() {
     // });
 
     // draw birds
-    // objList.forEach(function(o) {
-    //   drawBird(o, now/1000, dt/DT+1);
-    // });
+    objList.forEach(function(o) {
+      drawBird(o, now/1000, dt/DT+1);
+    });
 
     // draw altitude limit
     // var N=50;
@@ -546,7 +538,7 @@ $(document).ready(function() {
   var push=0;
   function boost() {
 
-    // showHelp = false;    
+    // showHelp = false;
 
     if (bird.boost !== true) {
       // play(pushes[push]);
@@ -564,7 +556,7 @@ $(document).ready(function() {
   }
 
   $(document).keydown(boost);
-  $('#canvas').mousedown(function() {
+  $('canvas').mousedown(function() {
   	boost();
   	return false;
   });
