@@ -31,6 +31,9 @@ $(function(){
 
 
   //--- Global variables ---//
+  var renderer, onRenderFcts, scene, camera, geometry, material, mesh,
+    W = window.innerWidth,
+    H = window.innerHeight;
 
 
   //--- Init ---//
@@ -45,18 +48,16 @@ $(function(){
 
     THREEx.Planets.baseURL  = '';
 
-    var geometry, material, mesh;
-
-    var renderer = new THREE.WebGLRenderer({
+    renderer = new THREE.WebGLRenderer({
       antialias : true
     });
-    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.setSize(W, H);
     document.body.appendChild( renderer.domElement );
     renderer.shadowMapEnabled = true;
     
-    var onRenderFcts= [];
-    var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 100 );
+    onRenderFcts = [];
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 100 );
     camera.position.z = 2;
 
     // var controls = new THREE.OrbitControls( camera );
@@ -241,29 +242,7 @@ $(function(){
     //   });
     // });
 
-    // Load ISS mesh and add it to the scene
-    // var loader = new THREE.JSONLoader();
-    // var model = loader.parse( 'scripts/models/treehouse_logo.js' );
-    // var mesh = new THREE.Mesh( model.geometry, new THREE.MeshBasicMaterial() );
-    // scene.add( mesh );
-    // loader.load('scripts/models/iss.json', function(geometry){
-    //   var material = new THREE.MeshLambertMaterial({color: 0x55B663});
-    //   var issMesh = new THREE.Mesh(geometry, material);
 
-    //   var iss = { x: 1, y: 0, z: 0, angle: 0, altitude: 0.7 };
-    //   issMesh.position.set(iss.x, iss.y, iss.z);
-    //   issMesh.scale.multiplyScalar(111);
-    //   scene.add(issMesh);
-
-    //   onRenderFcts.push(function(delta){
-    //     var orbitSpeed = 1;
-    //     iss.angle -= orbitSpeed * delta;
-    //     iss.x = iss.altitude * Math.cos(iss.angle);
-    //     iss.z = iss.altitude * Math.sin(iss.angle);
-    //     issMesh.position.set(iss.x, iss.y, iss.z);
-    //     issMesh.rotation.y += orbitSpeed * delta;
-    //   });
-    // });
 
     //--- Camera Controls ---//
 
@@ -320,6 +299,11 @@ $(function(){
       });
     });
 
+    window.flappy = {
+      onRenderFcts: onRenderFcts,
+      scene: scene,
+      camera: camera
+    };
 
   }
 
