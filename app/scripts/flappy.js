@@ -25,6 +25,19 @@
 $(document).ready(function() {
   'use strict';
 
+
+  var $indicator = $('<span>')
+    .css({
+      'position': 'fixed',
+      'top': '20px',
+      'right': '20px',
+      'color': 'white',
+      'font-size': '25px'
+    })
+    .appendTo('body');
+
+  $indicator.text('');
+
   // var canvas = $('#canvas');
   // var ctx = canvas[0].getContext('2d');
   // var H;
@@ -206,7 +219,10 @@ $(document).ready(function() {
     // ctx.rotate(interpolateAngle(obj.aPrev, obj.a, alpha));
     // ctx.translate(-20, -20);
 
-    box.position.set(obj.x*10000, obj.y/999999, obj.z); //nbed
+    // $indicator.text(obj.x.toFixed(2) +', '+ obj.y.toFixed(2) +', '+ obj.z.toFixed(2));
+    $indicator.text(obj.u.toFixed(2) +', '+ obj.v.toFixed(2) +', '+ obj.a.toFixed(2));
+
+    box.position.set(obj.x, obj.y, obj.z); //nbed
 
     // if (obj.dead === true) {
     //   ctx.drawImage(sheet, 171, 119, 20, 20, 0, 0, 40, 40);
@@ -224,13 +240,13 @@ $(document).ready(function() {
     // ctx.restore();
   }
 
-  var M = 1000000; // Mass constant??
+  var M = 16.7; // Mass constant??
   var G = 10; // Gravity constant???
-  var R = 1; // Radius constant?
+  var R = 0.91; // Radius constant?
 
   // var showHelp = true;
 
-  var FLAP = 0.16; // boost amount
+  var FLAP = 0.09; // boost amount
 
   // birds list(s) and creation / destruction
   var toRemove = [];
@@ -256,10 +272,10 @@ $(document).ready(function() {
     bird.aPrev = bird.a;
 
 
-    var k = 0.5;
+    var k = 0.1;
     box = new THREE.Mesh(new THREE.BoxGeometry(k,k,k), new THREE.MeshLambertMaterial({
       side : THREE.DoubleSide,
-      color: 0xFF8888
+      color: 0xFFFF00
     }));
     box.overdraw = true;
     box.position.set(bird.x,bird.y,bird.z);
@@ -401,7 +417,7 @@ $(document).ready(function() {
   var oldT = 0;
   var dt = 0;
   function run(now) {
-    //while(bird.boost > 0) {      
+    //while(bird.boost > 0) {      ###
     if (bird.boost === true) {
       // var d = Math.sqrt((bird.u*bird.u)+(bird.v*bird.v));
       bird.u += Math.cos(bird.a) * bird.f * FLAP;// * dt;
@@ -461,9 +477,9 @@ $(document).ready(function() {
       // stepParts(DT);
     }
 
-    if (bird.t > 5.0) { // spawn new bird if last boost > 5 seconds
-      bird = newBird();
-    }
+    // if (bird.t > 5.0) { // spawn new bird if last boost > 5 seconds
+    //   bird = newBird();
+    // }
 
     // draw blue background and planet
     // ctx.fillStyle = 'rgba(76, 134, 140, 1)'; //'#70c5ce';

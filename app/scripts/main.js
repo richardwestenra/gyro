@@ -178,7 +178,7 @@ $(function(){
       var orbitSpeed = 1/5;
       moon.angle -= orbitSpeed * delta;
       moon.x = moon.altitude * Math.cos(moon.angle);
-      moon.z = moon.altitude * Math.sin(moon.angle) - 0.03;
+      moon.z = moon.altitude * Math.sin(moon.angle);
       moonMesh.position.set(moon.x, moon.y, moon.z);
       moonMesh.rotation.y += orbitSpeed * delta;
     });
@@ -260,6 +260,7 @@ $(function(){
     });
 
     var cam = { alt: 2, spin: 4 };
+    cam.alt += 5; //nbed
     onRenderFcts.push(function(delta){
       // camera.position.x += (mouse.x*5 - camera.position.x) * (delta*3);
 
