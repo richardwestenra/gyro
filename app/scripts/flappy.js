@@ -223,6 +223,7 @@ $(document).ready(function() {
     $indicator.text(obj.u.toFixed(2) +', '+ obj.v.toFixed(2) +', '+ obj.a.toFixed(2));
 
     box.position.set(obj.x, obj.y, obj.z); //nbed
+    box.rotation.z = obj.a;
 
     // if (obj.dead === true) {
     //   ctx.drawImage(sheet, 171, 119, 20, 20, 0, 0, 40, 40);
@@ -240,13 +241,13 @@ $(document).ready(function() {
     // ctx.restore();
   }
 
-  var M = 16.7; // Mass constant??
-  var G = 10; // Gravity constant???
-  var R = 0.91; // Radius constant?
+  var M = 10; // Mass constant??
+  var G = 5; // Gravity constant???
+  var R = 0.6; // Radius constant?
 
   // var showHelp = true;
 
-  var FLAP = 0.09; // boost amount
+  var FLAP = 0.055; // boost amount
 
   // birds list(s) and creation / destruction
   var toRemove = [];
@@ -258,7 +259,7 @@ $(document).ready(function() {
   function newBird() {
     var bird = {
       x : 0,
-      y : -R*1.25,
+      y : R,
       z : 0,
       u: 0, // vertical velocity (up)?
       v: 0, // orbital velocity?
@@ -273,7 +274,7 @@ $(document).ready(function() {
 
 
     var k = 0.1;
-    box = new THREE.Mesh(new THREE.BoxGeometry(k,k,k), new THREE.MeshLambertMaterial({
+    box = new THREE.Mesh(new THREE.BoxGeometry(k*3,k,k), new THREE.MeshLambertMaterial({
       side : THREE.DoubleSide,
       color: 0xFFFF00
     }));
@@ -379,8 +380,8 @@ $(document).ready(function() {
     } else {
       var A = Math.atan2(obj.y, obj.x);
       
-      if (d < 200) {
-        obj.a = A + ((Math.PI/2) * ((d-100)/100));
+      if (d < R*2) {
+        obj.a = A + ((Math.PI/2) * ((d-R)/R));
       } else {
         obj.a = A + (Math.PI/2);
       }
