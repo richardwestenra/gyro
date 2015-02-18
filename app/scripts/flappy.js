@@ -223,7 +223,7 @@ $(document).ready(function() {
     $indicator.text(obj.u.toFixed(2) +', '+ obj.v.toFixed(2) +', '+ obj.a.toFixed(2));
 
     box.position.set(obj.x, obj.y, obj.z); //nbed
-    box.rotation.z = obj.a;
+    box.rotation.y = -obj.a;
 
     // if (obj.dead === true) {
     //   ctx.drawImage(sheet, 171, 119, 20, 20, 0, 0, 40, 40);
@@ -258,8 +258,8 @@ $(document).ready(function() {
 
   function newBird() {
     var bird = {
-      x : 0,
-      y : R,
+      x : R,
+      y : 0,
       z : 0,
       u: 0, // vertical velocity (up)?
       v: 0, // orbital velocity?
@@ -269,7 +269,7 @@ $(document).ready(function() {
       dead: false
     };
     bird.xPrev = bird.x;
-    bird.yPrev = bird.y;
+    bird.zPrev = bird.z;
     bird.aPrev = bird.a;
 
 
@@ -353,32 +353,32 @@ $(document).ready(function() {
   }
   
   // distance from 0,0
-  function dist(x1, y1) {
-    return Math.sqrt((x1*x1)+(y1*y1));
+  function dist(x1, z1) {
+    return Math.sqrt((x1*x1)+(z1*z1));
   }
 
   // Physics
   function grav(obj, dt) {
     obj.xPrev = obj.x;
-    obj.yPrev = obj.y;
+    obj.zPrev = obj.z;
     obj.aPrev = obj.a;
     
-    var d = dist(obj.x, obj.y); // altitude
+    var d = dist(obj.x, obj.z); // altitude
 
     var f = G*M/(d*d); // Force  = Gravity * Mass / altitude^2
     obj.f = f;
 
     var nX = obj.x/d;
-    var nY = obj.y/d;
+    var nZ = obj.z/d;
 
     obj.u -= nX * f * dt;
-    obj.v -= nY * f * dt;
+    obj.v -= nZ * f * dt;
 
     // compute angle
     if (obj.dead === true) {
       obj.a += 10*dt;
     } else {
-      var A = Math.atan2(obj.y, obj.x);
+      var A = Math.atan2(obj.z, obj.x);
       
       if (d < R*2) {
         obj.a = A + ((Math.PI/2) * ((d-R)/R));
@@ -388,12 +388,12 @@ $(document).ready(function() {
     }
 
     var X = obj.x + obj.u*dt;
-    var Y = obj.y + obj.v*dt;
-    var D = dist(X, Y);
+    var Z = obj.z + obj.v*dt;
+    var D = dist(X, Z);
 
     if (D > R) { // not coliding with planet
       obj.x = X;
-      obj.y = Y;
+      obj.z = Z;
 
       obj.t += dt;
 
@@ -403,7 +403,7 @@ $(document).ready(function() {
 
     } else { // colliding
       obj.x = R*X/D;
-      obj.y = R*Y/D;
+      obj.z = R*Z/D;
       obj.u = 0;
       obj.v = 0;
 
@@ -456,7 +456,7 @@ $(document).ready(function() {
           if (o === o2 || o.dead === true || o2.dead === true) {
             return;
           }
-          var d = dist(o.x-o2.x, o.y-o2.y);
+          var d = dist(o.x-o2.x, o.z-o2.z);
           if (d < 20) {
             killBird(o);
             killBird(o2);
