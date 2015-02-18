@@ -165,7 +165,7 @@ $(document).ready(function() {
 
       obj.t += dt;
 
-      // if (D > 400 && obj.dead !== true) { // kill if out of range
+      // if (D > R*4 && obj.dead !== true) { // kill if out of range
       //   killBird(obj);
       // }
 
@@ -231,6 +231,10 @@ $(document).ready(function() {
           objList.splice(objList.indexOf(o), 1);
         }
       });
+    }
+
+    if (bird.t > 5.0) { // spawn new bird if last boost > 5 seconds
+      bird = newBird();
     }
 
     // draw birds
