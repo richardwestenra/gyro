@@ -70,7 +70,7 @@ $(function(){
     scene.add( light );
 
     light = new THREE.DirectionalLight( 0x888888, 1 );
-    light.position.set(5,0.5,5);
+    light.position.set(5,0,5);
     scene.add( light );
     light.castShadow = true;
     light.shadowCameraNear = 0.01;
@@ -98,7 +98,7 @@ $(function(){
     material.uniforms.glowColor.value.set(0xFFFFFA);
     material.uniforms.coeficient.value = 0.1;
     mesh = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), material );
-    mesh.position.set(50,1,50);
+    mesh.position.set(30,0,30);
     mesh.scale.multiplyScalar(3);
     scene.add( mesh );
 
@@ -113,16 +113,7 @@ $(function(){
 
     //--- add an object and make it move ---//
 
-    var sat = {
-      x: -1,
-      y: 0,
-      z: 0,
-      angle: 0,
-      altitude: 0.55,
-      speed: 3/4
-    };
     var satellite = new THREE.Object3D();
-    satellite.position.set(sat.x, sat.y, sat.z);
     satellite.scale.multiplyScalar(1/90);
     scene.add(satellite);
     var satMaterial = new THREE.MeshLambertMaterial({
@@ -146,15 +137,19 @@ $(function(){
     box.castShadow = true;
     satellite.add(box);
 
+    var s = {
+      angle: 0,
+      altitude: 0.55,
+      speed: 3/4
+    };
     onRenderFcts.push(function(delta){
-      sat.angle -= sat.speed * delta;
-      sat.x = sat.altitude * Math.cos(sat.angle);
-      sat.y = sat.altitude * Math.sin(sat.angle);
-      sat.z = sat.altitude * Math.sin(sat.angle);
-      satellite.position.set(sat.x, sat.y, sat.z);
-      satellite.rotation.x += sat.speed * delta;
-      satellite.rotation.z -= sat.speed * delta;
-      satellite.rotation.y += sat.speed * delta;
+      s.angle -= s.speed * delta;
+      satellite.position.x = s.altitude * Math.cos(s.angle);
+      satellite.position.y = s.altitude * Math.sin(s.angle);
+      satellite.position.z = s.altitude * Math.sin(s.angle);
+      satellite.rotation.x += s.speed * delta;
+      satellite.rotation.z -= s.speed * delta;
+      satellite.rotation.y += s.speed * delta;
     });
 
 
@@ -168,13 +163,13 @@ $(function(){
     containerEarth.rotateZ(-23.4 * Math.PI/180);
     containerEarth.position.z = 0;
     scene.add(containerEarth);
-    var moon = { x: 0, y: 0, z: 0, angle: 0, altitude: 1 };
+    var moon = { x: 0, y: 0, z: 0, angle: 0, altitude: 3 };
     var moonMesh = THREEx.Planets.createMoon();
     moonMesh.position.set(moon.x, moon.y, moon.z);
     moonMesh.scale.multiplyScalar(1/5);
     moonMesh.receiveShadow = true;
     moonMesh.castShadow = true;
-    containerEarth.add(moonMesh);
+    scene.add(moonMesh);
     onRenderFcts.push(function(delta){
       var orbitSpeed = 1/5;
       moon.angle -= orbitSpeed * delta;
@@ -194,7 +189,7 @@ $(function(){
 
     geometry = new THREE.SphereGeometry(0.5, 32, 32);
     material = THREEx.createAtmosphereMaterial();
-    material.uniforms.glowColor.value.set(0x00b3ff);
+    material.uniforms.glowColor.value.set(0x339cc9);
     material.uniforms.coeficient.value = 0.8;
     material.uniforms.power.value  = 2.0;
     mesh = new THREE.Mesh(geometry, material );
@@ -205,7 +200,7 @@ $(function(){
     geometry = new THREE.SphereGeometry(0.5, 32, 32);
     material = THREEx.createAtmosphereMaterial();
     material.side = THREE.BackSide;
-    material.uniforms.glowColor.value.set(0x00b3ff);
+    material.uniforms.glowColor.value.set(0x339cc9);
     material.uniforms.coeficient.value = 0.5;
     material.uniforms.power.value  = 22;
     mesh = new THREE.Mesh(geometry, material );
@@ -260,18 +255,14 @@ $(function(){
       mouse.y = (d.beta-90) / 180;
     });
 
-    var cam = { alt: 2, spin: 6 };
     camera.altitude = 6;
+    camera.spin = 10;
     onRenderFcts.push(function(delta){
-      // camera.position.x += (mouse.x*5 - camera.position.x) * (delta*3);
-
-      camera.position.y += (mouse.y*5 - camera.position.y) * (delta*3);
-      camera.position.x = camera.altitude * Math.cos(mouse.x * cam.spin);
-      camera.position.z = camera.altitude * Math.sin(mouse.x * cam.spin);
-
-      // camera.position.x = mouse.x*5 * Math.cos(delta) + mouse.x * Math.sin(delta);
-      // camera.position.z = mouse.x*5 * Math.cos(delta) - mouse.x * Math.sin(delta);
-      camera.lookAt( scene.position );
+      var c = camera;
+      c.position.y += (mouse.y*5 - c.position.y) * (delta*3);
+      c.position.x = c.altitude * Math.cos(mouse.x * c.spin);
+      c.position.z = c.altitude * Math.sin(mouse.x * c.spin);
+      c.lookAt( scene.position );
     });
 
 

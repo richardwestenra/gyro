@@ -32,8 +32,8 @@ $(document).ready(function() {
   'use strict';
 
   // Constants:
-  var M = 10; // Mass constant??
-  var G = 5; // Gravity constant???
+  var M = 4; // Mass constant??
+  var G = 10; // Gravity constant???
   var R = 0.6; // Radius constant?
   var FLAP = 0.08; // boost amount
 
