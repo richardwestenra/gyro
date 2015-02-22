@@ -22,8 +22,10 @@
 // jshint devel:true
 /* globals flappy, THREE */
 
-
+// NBED
 var doOnce = true;
+var yellow = 0xFFFF00;
+var red = 0xFF0000;
 
 
 $(document).ready(function() {
@@ -58,7 +60,7 @@ $(document).ready(function() {
     scene = flappy.scene,
     camera = flappy.camera;
 
-  function drawBird(obj, t, alpha) {
+  function drawBird(obj) { // prev args: t, alpha
     // ctx.translate(alpha*obj.x + (1-alpha)*obj.xPrev, alpha*obj.y + (1-alpha)*obj.yPrev);
     // ctx.rotate(interpolateAngle(obj.aPrev, obj.a, alpha));
     // ctx.translate(-20, -20);
@@ -66,8 +68,6 @@ $(document).ready(function() {
     // $indicator.text(obj.x.toFixed(2) +', '+ obj.y.toFixed(2) +', '+ obj.z.toFixed(2));
     // $indicator.text(alpha +', '+obj.u.toFixed(2) +', '+ obj.v.toFixed(2) +', '+ obj.a.toFixed(2));
 
-    // box.position.set(obj.x, obj.y, -obj.z); //nbed
-    // box.rotation.y = obj.a;
     obj.el.position.set(obj.x, obj.y, -obj.z); //nbed
     obj.el.rotation.y = obj.a;
   }
@@ -93,7 +93,7 @@ $(document).ready(function() {
     var k = 0.1;
     bird.el = new THREE.Mesh(new THREE.BoxGeometry(k*3,k,k), new THREE.MeshLambertMaterial({
       side : THREE.DoubleSide,
-      color: 0xFFFF00
+      color: yellow
     }));
     bird.el.overdraw = true;
     bird.el.position.set(bird.x,bird.y,bird.z);
@@ -251,6 +251,8 @@ $(document).ready(function() {
   var push=0;
   function boost() {
 
+    doOnce = true; //nbed
+
     // showHelp = false;
 
     if (bird.boost !== true) {
@@ -260,20 +262,23 @@ $(document).ready(function() {
         push = 0;
       }
       bird.boost = true;
+      bird.el.material.color.setHex(red);
     }
-    /* cheat for tests
-    bird = newBird();
-    bird.y = -200;
-    bird.u = 250;
-    */
+    /* cheat for tests */
+    // bird = newBird();
+    // bird.y = -200;
+    // bird.u = 250; 
   }
 
-  $(document).keydown(boost);
-  $('canvas').mousedown(function(e) {
-    boost();
-    e.preventDefault();
-    doOnce = true;
-  });
+  function boostEnd(){
+    bird.el.material.color.setHex(yellow);
+  }
+
+  $(document)
+    .on('keydown',boost)
+    .on('mousedown',boost)
+    .on('keyup',boostEnd)
+    .on('mouseup',boostEnd);
 
 
   onRenderFcts.push(function(delta, now){

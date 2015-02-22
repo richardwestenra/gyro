@@ -106,6 +106,7 @@ $(function(){
     //--- added starfield ---//
     
     var starSphere = THREEx.Planets.createStarfield();
+    starSphere.scale.multiplyScalar(0.5);
     scene.add(starSphere);
 
 
@@ -259,14 +260,14 @@ $(function(){
       mouse.y = (d.beta-90) / 180;
     });
 
-    var cam = { alt: 2, spin: 4 };
-    cam.alt += 5; //nbed
+    var cam = { alt: 2, spin: 6 };
+    camera.altitude = 6;
     onRenderFcts.push(function(delta){
       // camera.position.x += (mouse.x*5 - camera.position.x) * (delta*3);
 
       camera.position.y += (mouse.y*5 - camera.position.y) * (delta*3);
-      camera.position.x = cam.alt * Math.cos(mouse.x * cam.spin);
-      camera.position.z = cam.alt * Math.sin(mouse.x * cam.spin);
+      camera.position.x = camera.altitude * Math.cos(mouse.x * cam.spin);
+      camera.position.z = camera.altitude * Math.sin(mouse.x * cam.spin);
 
       // camera.position.x = mouse.x*5 * Math.cos(delta) + mouse.x * Math.sin(delta);
       // camera.position.z = mouse.x*5 * Math.cos(delta) - mouse.x * Math.sin(delta);
@@ -307,6 +308,36 @@ $(function(){
     };
 
   }
+
+
+
+  //--- Mousewheel zoom ---//
+
+  function onMouseWheel(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    var delta = 0;
+    if ( e.wheelDelta !== undefined ) { // WebKit / Opera / Explorer 9
+      delta = e.wheelDelta;
+    } else if ( e.detail !== undefined ) { // Firefox
+      delta = - e.detail;
+    }
+
+    var zoomSpeed = 0.2;
+
+    if ( delta > 0 ) {
+      camera.altitude += zoomSpeed;
+    } else {
+      camera.altitude -= zoomSpeed;
+    }
+    // Min/max altitude
+    camera.altitude = Math.max(camera.altitude, 1.2);
+    camera.altitude = Math.min(camera.altitude, 30);
+  }
+  document.addEventListener( 'mousewheel', onMouseWheel, false );
+  document.addEventListener( 'DOMMouseScroll', onMouseWheel, false ); // firefox
+
 
 
 
