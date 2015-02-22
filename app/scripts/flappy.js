@@ -22,6 +22,10 @@
 // jshint devel:true
 /* globals flappy, THREE */
 
+
+var doOnce = true;
+
+
 $(document).ready(function() {
   'use strict';
 
@@ -29,13 +33,12 @@ $(document).ready(function() {
   var M = 10; // Mass constant??
   var G = 5; // Gravity constant???
   var R = 0.6; // Radius constant?
-  var FLAP = 0.055; // boost amount
+  var FLAP = 0.08; // boost amount
 
   // birds list(s) and creation / destruction
   var toRemove = [];
   var objList = [];
   var alive = 0;
-  var box;
 
   var $indicator = $('<span>')
     .css({
@@ -61,10 +64,12 @@ $(document).ready(function() {
     // ctx.translate(-20, -20);
 
     // $indicator.text(obj.x.toFixed(2) +', '+ obj.y.toFixed(2) +', '+ obj.z.toFixed(2));
-    $indicator.text(obj.u.toFixed(2) +', '+ obj.v.toFixed(2) +', '+ obj.a.toFixed(2));
+    // $indicator.text(alpha +', '+obj.u.toFixed(2) +', '+ obj.v.toFixed(2) +', '+ obj.a.toFixed(2));
 
-    box.position.set(obj.x, obj.y, -obj.z); //nbed
-    box.rotation.y = obj.a;
+    // box.position.set(obj.x, obj.y, -obj.z); //nbed
+    // box.rotation.y = obj.a;
+    obj.el.position.set(obj.x, obj.y, -obj.z); //nbed
+    obj.el.rotation.y = obj.a;
   }
 
   function newBird() {
@@ -77,7 +82,8 @@ $(document).ready(function() {
       a : -Math.PI/2, // angle?
       t: 0,
       boost: 0,
-      dead: false
+      dead: false,
+      el: null
     };
     bird.xPrev = bird.x;
     bird.zPrev = bird.z;
@@ -85,13 +91,13 @@ $(document).ready(function() {
 
 
     var k = 0.1;
-    box = new THREE.Mesh(new THREE.BoxGeometry(k*3,k,k), new THREE.MeshLambertMaterial({
+    bird.el = new THREE.Mesh(new THREE.BoxGeometry(k*3,k,k), new THREE.MeshLambertMaterial({
       side : THREE.DoubleSide,
       color: 0xFFFF00
     }));
-    box.overdraw = true;
-    box.position.set(bird.x,bird.y,bird.z);
-    scene.add(box);
+    bird.el.overdraw = true;
+    bird.el.position.set(bird.x,bird.y,bird.z);
+    scene.add(bird.el);
     
     objList.push(bird);
     return bird;
@@ -183,9 +189,7 @@ $(document).ready(function() {
     }
   }
 
-  var oldT = 0;
-  var dt = 0;
-  function run(now) {
+  function run(dt, now) {
     //while(bird.boost > 0) {      ###
     if (bird.boost === true) {
       // var d = Math.sqrt((bird.u*bird.u)+(bird.v*bird.v));
@@ -194,12 +198,12 @@ $(document).ready(function() {
       bird.t = 0;
       bird.boost = false;
     }
+    now = now*1000;
     
-    if(oldT === 0) {
-      oldT = now;
-    }
-    dt += (now - oldT) / 1000;
-    oldT = now;
+    // if (doOnce) {
+    //   console.log(delta, dt);
+    //   doOnce = false;
+    // }
 
     var DT = 0.02;
     while(dt > 0) {
@@ -214,7 +218,7 @@ $(document).ready(function() {
             return;
           }
           var d = dist(o.x-o2.x, o.z-o2.z);
-          if (d < 20) {
+          if (d < 0.2) {
             killBird(o);
             killBird(o2);
           }
@@ -228,12 +232,13 @@ $(document).ready(function() {
       
       toRemove.forEach(function(o) {
         if (objList.indexOf(o) !== -1) {
+          scene.remove(o.el);
           objList.splice(objList.indexOf(o), 1);
         }
       });
     }
 
-    if (bird.t > 5.0) { // spawn new bird if last boost > 5 seconds
+    if (bird.t > 2.0) { // spawn new bird if last boost > 5 seconds
       bird = newBird();
     }
 
@@ -241,8 +246,6 @@ $(document).ready(function() {
     objList.forEach(function(o) {
       drawBird(o, now/1000, dt/DT+1);
     });
-
-    requestAnimationFrame(run);
   }
 
   var push=0;
@@ -266,11 +269,15 @@ $(document).ready(function() {
   }
 
   $(document).keydown(boost);
-  $('canvas').mousedown(function() {
-  	boost();
-  	return false;
+  $('canvas').mousedown(function(e) {
+    boost();
+    e.preventDefault();
+    doOnce = true;
   });
 
-  requestAnimationFrame(run);
+
+  onRenderFcts.push(function(delta, now){
+    run(delta, now);
+  });
 
 });
